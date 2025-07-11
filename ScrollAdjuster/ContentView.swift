@@ -1,11 +1,11 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var scrollwatcher = ScrollWatcher()
     let ITEMS = ["🍎","🍊","🍇","🍌","🍉","🍐","🍒"]
     let ITEM_SPACE : CGFloat = 70  //アイテム間のスペース
     let ITEM_WIDTH : CGFloat = 100  //アイテムの幅
     @State var centerIndex : Int = 0  //中央に表示するアイテムのインデックス
+    @State var scrollStopTask: DispatchWorkItem?  //遅延アクション管理
     var body: some View {
         GeometryReader{ geometry in
             
@@ -35,7 +35,6 @@ struct ContentView: View {
                         )
                     }
                     .onPreferenceChange(ScrollOffsetKey.self) { value in  //スクロール管理
-                        scrollwatcher.scrollOffset = value // スクロール位置を更新
                         detectScrollEnd(value, proxy: proxy, geometry: geometry)
                     }
                 }
@@ -44,12 +43,11 @@ struct ContentView: View {
     }
     // スクロールの変化を検知し、一定時間後にスクロール終了を判定
     private func detectScrollEnd(_ newOffset: CGFloat,proxy:ScrollViewProxy, geometry : GeometryProxy) {
-        let moveIndex = calculateIndex(newOffset, proxy: proxy, geometry: geometry)
+        let moveIndex = calculateIndex(newOffset, geometry: geometry)
 
-        scrollwatcher.scrollOffset = newOffset
         
         // すでにスケジュールされたタスクをキャンセル
-        scrollwatcher.scrollStopTask?.cancel()
+        scrollStopTask?.cancel()
         
         
         // 新しいタスクを作成して 0.2 秒後にスクロール停止と判定
@@ -62,16 +60,16 @@ struct ContentView: View {
             }
         }
         
-        scrollwatcher.scrollStopTask = task
+        scrollStopTask = task
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: task)
         
     }
     
-    private func calculateIndex(_ newOffset: CGFloat,proxy:ScrollViewProxy, geometry : GeometryProxy) -> Int {
+    private func calculateIndex(_ newOffset: CGFloat, geometry : GeometryProxy) -> Int {
         
-        let adjustedContentOffset = -newOffset + geometry.size.width/2  //画面中央から右向きに計測したスクロール量
+        let adjustedOffset = -newOffset + geometry.size.width/2  //画面中央から右向きに計測したスクロール量
         
-        let double_index : Double = ((adjustedContentOffset) / (ITEM_SPACE + ITEM_WIDTH))
+        let double_index : Double = ((adjustedOffset) / (ITEM_SPACE + ITEM_WIDTH))
         
         
         centerIndex = Int(double_index)

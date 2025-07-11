@@ -1,5 +1,5 @@
 import SwiftUI
-/// **スクロールオフセットを取得するためのPreferenceKey**
+
 struct ScrollOffsetKey: PreferenceKey {
     
     static var defaultValue: CGFloat = 0
