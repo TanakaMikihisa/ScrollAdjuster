@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    let ITEMS = ["🍎","🍊","🍇","🍌","🍉","🍐","🍒"]
+    let ITEMS = ["🍎","🍊","🍇","🍌","🍉","🍐","🍒","🍈","🥭"]
     let ITEM_SPACE : CGFloat = 70  //アイテム間のスペース
     let ITEM_WIDTH : CGFloat = 100  //アイテムの幅
     @State var centerIndex : Int = 0  //中央に表示するアイテムのインデックス
