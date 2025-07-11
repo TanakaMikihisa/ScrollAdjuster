@@ -1,9 +1,6 @@
-
 import SwiftUI
 
-
 struct ContentView: View {
-    //スクロール管理----------------------------------------------------
     @State private var scrollwatcher = ScrollWatcher()
     let ITEMS = ["🍎","🍊","🍇","🍌","🍉","🍐","🍒"]
     let ITEM_SPACE : CGFloat = 70  //アイテム間のスペース
@@ -32,17 +29,14 @@ struct ContentView: View {
                             GeometryReader { proxy in
                                 Color.clear.preference(
                                     key: ScrollOffsetKey.self,
-                                    value: ScrollOffset(
-                                        minX: proxy.frame(in: .global).minX,
-                                        maxX: proxy.frame(in: .global).maxX
-                                    )
+                                    value: proxy.frame(in: .global).minX
                                 )
                             }
                         )
                     }
                     .onPreferenceChange(ScrollOffsetKey.self) { value in  //スクロール管理
-                        scrollwatcher.scrollOffset = value.minX // スクロール位置を更新
-                        detectScrollEnd(value.minX, proxy: proxy, geometry: geometry)
+                        scrollwatcher.scrollOffset = value // スクロール位置を更新
+                        detectScrollEnd(value, proxy: proxy, geometry: geometry)
                     }
                 }
             }
