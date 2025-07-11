@@ -1,9 +1,3 @@
-//
-//  ScrollAdjusterApp.swift
-//  ScrollAdjuster
-//
-//  Created by tanakamiki on 2025/07/11.
-//
 
 import SwiftUI
 
